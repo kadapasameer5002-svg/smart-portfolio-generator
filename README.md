@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Smart Portfolio Generator
 
-## Getting Started
+Smart Portfolio is an intelligent Next.js web application that instantly converts your uploaded resume (PDF, DOCX, TXT) into a beautiful, fully-responsive professional portfolio. It automatically extracts your experience, education, projects, skills, and certifications, allowing you to review and edit the information before generating a final portfolio.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Intelligent Resume Parsing:** Automatically extracts structured data from PDF, DOCX, or TXT resumes using advanced heuristics.
+- **Interactive Review Dashboard:** A sleek UI to edit and verify all extracted sections before publishing.
+- **Live Preview:** See exactly what your portfolio will look like in real-time.
+- **One-Click HTML Export:** Download your entire portfolio as a completely standalone, offline-ready HTML file with all CSS, images, and fonts securely inlined.
+- **Public Hosted Routes:** Automatically generates a public, unique URL for your portfolio using Supabase.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technologies Used
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Framework:** Next.js 14+ (App Router)
+- **Styling:** Tailwind CSS (Dashboard) & Bootstrap (Generated Portfolio)
+- **Database:** Supabase (PostgreSQL)
+- **Parsing:** pdf2json, mammoth (docx)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Prerequisites
 
-## Learn More
+- Node.js 18+
+- npm or pnpm
+- A Supabase Project (for cloud database storage)
 
-To learn more about Next.js, take a look at the following resources:
+## Installation & Setup
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Clone the repository:**
+   \\\ash
+   git clone https://github.com/yourusername/smart-portfolio.git
+   cd smart-portfolio
+   \\\
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. **Install dependencies:**
+   \\\ash
+   npm install
+   \\\
 
-## Deploy on Vercel
+3. **Set up Environment Variables:**
+   Copy the example environment file and fill in your Supabase credentials:
+   \\\ash
+   cp .env.example .env.local
+   \\\
+   You will need to add your \NEXT_PUBLIC_SUPABASE_URL\ and \NEXT_PUBLIC_SUPABASE_ANON_KEY\.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. **Set up Supabase Database:**
+   Run the following SQL in your Supabase SQL Editor to create the required table:
+   \\\sql
+   CREATE TABLE portfolios (
+       id uuid default uuid_generate_v4() primary key,
+       slug text unique not null,
+       portfolio_data jsonb not null,
+       created_at timestamp with time zone default timezone('utc'::text, now()) not null
+   );
+   \\\
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+5. **Run the Development Server:**
+   \\\ash
+   npm run dev
+   \\\
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Deployment Instructions
+
+### Deploying to Vercel (Recommended)
+Because this application uses Next.js **Server-Side API Routes** (for PDF parsing and HTML bundling), it is **NOT** compatible with GitHub Pages (which only hosts static frontend files). 
+
+The best way to deploy this application is using Vercel:
+
+1. Push your code to a GitHub repository.
+2. Go to [Vercel](https://vercel.com/) and sign in with GitHub.
+3. Click **Add New Project** and import your \smart-portfolio\ repository.
+4. In the Environment Variables section, add:
+   - \NEXT_PUBLIC_SUPABASE_URL\
+   - \NEXT_PUBLIC_SUPABASE_ANON_KEY\
+5. Click **Deploy**. Your application will be live in minutes with all API parsing routes fully functional!
+
+### Why not GitHub Pages?
+GitHub pages is designed for static site generation (\
+ext export\). However, Smart Portfolio requires an active Node.js server environment to parse uploaded PDFs using \pdf2json\ and bundle offline HTML using the filesystem (\s\). Therefore, deploying to a serverless provider like Vercel or Netlify is required.
+
