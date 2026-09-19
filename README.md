@@ -79,3 +79,4 @@ The best way to deploy this application is using Vercel:
 GitHub pages is designed for static site generation (\
 ext export\). However, Smart Portfolio requires an active Node.js server environment to parse uploaded PDFs using \pdf2json\ and bundle offline HTML using the filesystem (\s\). Therefore, deploying to a serverless provider like Vercel or Netlify is required.
 
+smart portfolio render live link :https://smart-portfolio-generator-pmh7.onrender.com
